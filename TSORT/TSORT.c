@@ -30,10 +30,16 @@ Output:
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-int level = 0;
+
 int values;
 
 #define DEBUG 0
+
+void swap(int *a, int *b) {
+	int t = *a;
+	*a = *b;
+	*b = t;
+}
 
 void p(int *array) {
 	int i;
@@ -57,9 +63,7 @@ int partition(int *array, int left, int right) {
 
 	/* swap the pivot with the right-most element */
 	if (DEBUG) printf("swapping %i and %i\n", array[index], array[right]);
-	temp = array[index];
-	array[index] = array[right];
-	array[right] = temp;
+	swap(&array[index], &array[right]);
 
 	/* loop over this */
 	while (1) {
@@ -75,9 +79,7 @@ int partition(int *array, int left, int right) {
 		if (i < j) {
 			/* swap those two positions */
 			if (DEBUG) printf("swapping %i and %i\n", array[i], array[j]);
-			temp = array[i];
-			array[i] = array[j];
-			array[j] = temp;
+			swap(&array[i], &array[j]);
 			if (DEBUG) p(array);
 		} else {
 			/* otherwise, we're done with this pass and break out of the main loop */
@@ -91,9 +93,7 @@ int partition(int *array, int left, int right) {
 	/* we've broken out of the main loop, so swap the pivot with the place where i stopped */
 	if (DEBUG) printf("putting pivot in place, ");
 	if (DEBUG) printf("swapping %i and %i\n", array[right], array[i]);
-	temp = array[i];
-	array[i] = array[right];
-	array[right] = temp;
+	swap(&array[i], &array[right]);
 
 	/* return that position so that we can sort the sub-arrays to the left and right of it */
 	return i;
@@ -106,7 +106,6 @@ void sort(int *array, int start, int end) {
 		sort(array, start, index - 1);
 		sort(array, index + 1, end);
 	}
-	level--;
 }
 
 int getnumb(int limit) {
