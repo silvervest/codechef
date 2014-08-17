@@ -33,6 +33,8 @@ Output:
 int level = 0;
 int values;
 
+#define DEBUG 0
+
 void p(int *array) {
 	int i;
 	for (i = 0; i < values; i++) {
@@ -50,36 +52,36 @@ int partition(int *array, int left, int right) {
 	int pivot = array[index];
 	int temp;
 
-	printf("pivot is: %i\n", pivot);
-	p(array);
+	if (DEBUG) printf("pivot is: %i\n", pivot);
+	if (DEBUG) p(array);
 
 	/* swap the pivot with the right-most element */
-	printf("swapping %i and %i\n", array[index], array[right]);
+	if (DEBUG) printf("swapping %i and %i\n", array[index], array[right]);
 	temp = array[index];
 	array[index] = array[right];
 	array[right] = temp;
 
 	/* loop over this */
 	while (1) {
-		p(array);
+		if (DEBUG) p(array);
 
 		/* move i position forward until element at i is greater than pivot */
 		while (array[++i] < pivot) ;
 		/* then move j position backward until element at j is less than pivot */
 		while (pivot < array[--j]) ;
-		printf("i stopped at %i, j stopped at %i\n", array[i], array[j]);
+		if (DEBUG) printf("i stopped at %i, j stopped at %i\n", array[i], array[j]);
 
 		/* now that both i and j are in position, if i is still to the left of j */
 		if (i < j) {
 			/* swap those two positions */
-			printf("swapping %i and %i\n", array[i], array[j]);
+			if (DEBUG) printf("swapping %i and %i\n", array[i], array[j]);
 			temp = array[i];
 			array[i] = array[j];
 			array[j] = temp;
-			p(array);
+			if (DEBUG) p(array);
 		} else {
 			/* otherwise, we're done with this pass and break out of the main loop */
-			printf("leaving loop\n");
+			if (DEBUG) printf("leaving loop\n");
 			break;
 		}
 
@@ -87,8 +89,8 @@ int partition(int *array, int left, int right) {
 	}
 
 	/* we've broken out of the main loop, so swap the pivot with the place where i stopped */
-	printf("putting pivot in place, ");
-	printf("swapping %i and %i\n", array[right], array[i]);
+	if (DEBUG) printf("putting pivot in place, ");
+	if (DEBUG) printf("swapping %i and %i\n", array[right], array[i]);
 	temp = array[i];
 	array[i] = array[right];
 	array[right] = temp;
@@ -98,7 +100,7 @@ int partition(int *array, int left, int right) {
 }
 
 void sort(int *array, int start, int end) {
-	printf("sorting array from %i to %i\n", start, end);
+	if (DEBUG) printf("sorting array from %i to %i\n", start, end);
 	if (start < end) {
 		int index = partition(array, start, end);
 		sort(array, start, index - 1);
@@ -117,7 +119,7 @@ int main(void) {
 
 /* for codechef, read from stdin */
 	scanf("%d\n", &values);
-	printf("sorting %i values\n", values);
+	if (DEBUG) printf("sorting %i values\n", values);
 
 	list = malloc(sizeof(int) * values);
 	for (i = 0; i < values; i++) {
@@ -138,19 +140,29 @@ int main(void) {
 	}
 */
 
-	printf("List  : ");
-	for (i = 0; i < values; i++) {
-		printf("%i ", list[i]);
+	if (DEBUG) {
+		printf("List  : ");
+		for (i = 0; i < values; i++) {
+			printf("%i ", list[i]);
+		}
+		printf("\n");
 	}
-	printf("\n");
 
+	/* start the sort */
 	sort(list, 0, values - 1);
-	printf("Sorted: ");
-	for (i = 0; i < values; i++) {
-		printf("%i ", list[i]);
-	}
 
-	printf("\n");
+	if (DEBUG) {
+		printf("Sorted: ");
+		for (i = 0; i < values; i++) {
+			printf("%i ", list[i]);
+		}
+
+		printf("\n");
+	} else {
+		for (i = 0; i < values; i++) {
+			printf("%i\n", list[i]);
+		}
+	}
 
 	free(list);
 
